@@ -25,13 +25,13 @@ WORKDIR /app
 # Enable corepack for yarn
 RUN corepack enable
 
-# Copy package files
-COPY package.json yarn.lock ./
+# Copy package files (yarn.lock is optional, will be generated if missing)
+COPY package.json yarn.lock* ./
 COPY packages/app/package.json packages/app/
 COPY packages/backend/package.json packages/backend/
 
-# Install dependencies
-RUN yarn install --frozen-lockfile --network-timeout 600000
+# Install dependencies (creates yarn.lock if missing)
+RUN yarn install --network-timeout 600000
 
 # Copy source files
 COPY . .
