@@ -2,10 +2,7 @@ import React from 'react';
 import { makeStyles, Theme, Grid, Paper } from '@material-ui/core';
 
 import { CatalogSearchResultListItem } from '@backstage/plugin-catalog';
-import {
-  catalogApiRef,
-  CATALOG_FILTER_EXISTS,
-} from '@backstage/plugin-catalog-react';
+import { catalogApiRef } from '@backstage/plugin-catalog-react';
 import { TechDocsSearchResultListItem } from '@backstage/plugin-techdocs';
 
 import { SearchType } from '@backstage/plugin-search';
@@ -92,8 +89,6 @@ const SearchPage = () => {
                 label="Owner"
                 name="owner"
                 multiple
-                getOptionLabel={option => option}
-                getOptionSelected={(option, value) => option === value}
                 fetchOptions={async () => {
                   const { items } = await catalogApi.getEntities({
                     filter: {
