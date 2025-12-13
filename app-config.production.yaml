@@ -1,0 +1,67 @@
+# =============================================================================
+# BACKSTAGE APP CONFIG - PRODUCTION
+# =============================================================================
+# Production overrides - all values use environment variable substitution.
+# This file is merged with app-config.yaml at build/runtime.
+# =============================================================================
+
+app:
+  baseUrl: ${APP_BASE_URL}
+
+backend:
+  baseUrl: ${BACKEND_BASE_URL}
+  listen:
+    port: 7007
+  cors:
+    origin: ${APP_BASE_URL}
+  database:
+    client: pg
+    connection:
+      host: ${POSTGRES_HOST}
+      port: ${POSTGRES_PORT}
+      user: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
+      database: ${POSTGRES_DB}
+      ssl:
+        rejectUnauthorized: false
+
+auth:
+  environment: production
+  providers:
+    guest:
+      dangerouslyAllowOutsideDevelopment: true
+    github:
+      production:
+        clientId: ${AUTH_GITHUB_CLIENT_ID}
+        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+        signIn:
+          resolvers:
+            - resolver: usernameMatchingUserEntityName
+        dangerouslyAllowSignInWithoutUserInCatalog: true
+    oidc:
+      production:
+        metadataUrl: ${AUTH_OIDC_METADATA_URL}
+        clientId: ${AUTH_OIDC_CLIENT_ID}
+        clientSecret: ${AUTH_OIDC_CLIENT_SECRET}
+        prompt: auto
+        signIn:
+          resolvers:
+            - resolver: emailMatchingUserEntityProfileEmail
+            - resolver: emailLocalPartMatchingUserEntityName
+    gitlab:
+      production:
+        clientId: ${AUTH_GITLAB_CLIENT_ID}
+        clientSecret: ${AUTH_GITLAB_CLIENT_SECRET}
+        signIn:
+          resolvers:
+            - resolver: usernameMatchingUserEntityName
+        dangerouslyAllowSignInWithoutUserInCatalog: true
+    microsoft:
+      production:
+        clientId: ${AUTH_MICROSOFT_CLIENT_ID}
+        clientSecret: ${AUTH_MICROSOFT_CLIENT_SECRET}
+        tenantId: ${AUTH_MICROSOFT_TENANT_ID}
+        signIn:
+          resolvers:
+            - resolver: emailMatchingUserEntityProfileEmail
+        dangerouslyAllowSignInWithoutUserInCatalog: true

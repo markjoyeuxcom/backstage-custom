@@ -1,0 +1,144 @@
+# =============================================================================
+# BACKSTAGE APP CONFIG - LOCAL DEVELOPMENT
+# =============================================================================
+# This is the base configuration for local development.
+# Production values are typically injected via environment variables.
+# =============================================================================
+
+app:
+  title: Backstage
+  baseUrl: http://localhost:3000
+
+organization:
+  name: My Company
+
+backend:
+  baseUrl: http://localhost:7007
+  listen:
+    port: 7007
+  csp:
+    connect-src: ["'self'", 'http:', 'https:']
+  cors:
+    origin: http://localhost:3000
+    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+    credentials: true
+  database:
+    client: better-sqlite3
+    connection: ':memory:'
+
+integrations:
+  github:
+    - host: github.com
+      token: ${GITHUB_TOKEN}
+  gitlab:
+    - host: gitlab.com
+      token: ${GITLAB_TOKEN}
+  azure:
+    - host: dev.azure.com
+      credentials:
+        - organizations:
+            - ${AZURE_DEVOPS_ORG}
+          personalAccessToken: ${AZURE_DEVOPS_TOKEN}
+  # AWS integration uses IAM/IRSA - no token needed in config
+
+proxy:
+  ### Example for how to add a proxy endpoint for the frontend.
+  ### A typical reason to do this is to handle HTTPS://CORS://authentication
+  # endpoints:
+  #   '/test':
+  #     target: 'https://example.com'
+  #     changeOrigin: true
+
+# Auth configuration
+auth:
+  environment: development
+  providers:
+    guest:
+      dangerouslyAllowOutsideDevelopment: true
+    github:
+      development:
+        clientId: ${AUTH_GITHUB_CLIENT_ID}
+        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+        signIn:
+          resolvers:
+            - resolver: usernameMatchingUserEntityName
+    oidc:
+      development:
+        metadataUrl: ${AUTH_OIDC_METADATA_URL}
+        clientId: ${AUTH_OIDC_CLIENT_ID}
+        clientSecret: ${AUTH_OIDC_CLIENT_SECRET}
+        prompt: auto
+        signIn:
+          resolvers:
+            - resolver: emailMatchingUserEntityProfileEmail
+            - resolver: emailLocalPartMatchingUserEntityName
+    gitlab:
+      development:
+        clientId: ${AUTH_GITLAB_CLIENT_ID}
+        clientSecret: ${AUTH_GITLAB_CLIENT_SECRET}
+        signIn:
+          resolvers:
+            - resolver: usernameMatchingUserEntityName
+    microsoft:
+      development:
+        clientId: ${AUTH_MICROSOFT_CLIENT_ID}
+        clientSecret: ${AUTH_MICROSOFT_CLIENT_SECRET}
+        tenantId: ${AUTH_MICROSOFT_TENANT_ID}
+        signIn:
+          resolvers:
+            - resolver: emailMatchingUserEntityProfileEmail
+
+scaffolder:
+  # Recommended: use GitHub Apps for SCM integration
+  # defaultAuthor:
+  #   name: scaffolder
+  #   email: scaffolder@backstage.io
+
+catalog:
+  import:
+    entityFilename: catalog-info.yaml
+    pullRequestBranchName: backstage-integration
+  rules:
+    - allow: [Component, System, API, Resource, Location, Template, User, Group]
+  locations:
+    # Local example data (for testing)
+    # - type: file
+    #   target: ../../examples/entities.yaml
+
+    # External catalog locations can be added here
+    # - type: url
+    #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all.yaml
+
+# Kubernetes plugin configuration
+kubernetes:
+  serviceLocatorMethod:
+    type: multiTenant
+  clusterLocatorMethods:
+    - type: config
+      clusters: []
+      # Production clusters injected via APP_CONFIG_kubernetes__clusterLocatorMethods
+
+# TechDocs configuration
+techdocs:
+  builder: local
+  generator:
+    runIn: local
+  publisher:
+    type: local
+
+# Azure DevOps plugin configuration
+azureDevOps:
+  host: dev.azure.com
+  organization: ${AZURE_DEVOPS_ORG}
+  token: ${AZURE_DEVOPS_TOKEN}
+
+# Cost Insights plugin configuration (example)
+# costInsights:
+#   engineerCost: 200000
+#   products:
+#     aws:
+#       name: AWS
+#     azure:
+#       name: Azure
+#     gcp:
+#       name: GCP
