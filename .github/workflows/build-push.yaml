@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
 
 env:
-  DOCKER_IMAGE: markjoyeux/backstage-custom
+  DOCKER_IMAGE: awaybreaktoday/backstage-custom
   PLATFORMS: linux/amd64,linux/arm64
 
 jobs:
