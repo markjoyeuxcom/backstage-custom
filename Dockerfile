@@ -38,7 +38,7 @@ COPY . .
 
 # Build the application
 RUN yarn tsc
-RUN yarn build:backend --config app-config.yaml --config app-config.production.yaml
+RUN yarn build:backend --config /app/app-config.yaml --config /app/app-config.production.yaml
 
 # -----------------------------------------------------------------------------
 # STAGE 2: PRODUCTION IMAGE
