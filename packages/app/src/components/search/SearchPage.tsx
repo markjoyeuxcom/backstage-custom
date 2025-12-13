@@ -2,7 +2,6 @@ import React from 'react';
 import { makeStyles, Theme, Grid, Paper } from '@material-ui/core';
 
 import { CatalogSearchResultListItem } from '@backstage/plugin-catalog';
-import { catalogApiRef } from '@backstage/plugin-catalog-react';
 import { TechDocsSearchResultListItem } from '@backstage/plugin-techdocs';
 
 import { SearchType } from '@backstage/plugin-search';
@@ -20,7 +19,6 @@ import {
   Header,
   Page,
 } from '@backstage/core-components';
-import { useApi } from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles((theme: Theme) => ({
   bar: {
@@ -40,7 +38,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SearchPage = () => {
   const classes = useStyles();
   const { types } = useSearch();
-  const catalogApi = useApi(catalogApiRef);
 
   return (
     <Page themeId="home">
@@ -83,21 +80,6 @@ const SearchPage = () => {
                 label="Lifecycle"
                 name="lifecycle"
                 values={['experimental', 'production']}
-              />
-              <SearchFilter.Autocomplete
-                className={classes.filter}
-                label="Owner"
-                name="owner"
-                multiple
-                fetchOptions={async () => {
-                  const { items } = await catalogApi.getEntities({
-                    filter: {
-                      kind: ['Group', 'User'],
-                    },
-                    fields: ['metadata.name'],
-                  });
-                  return items.map(e => e.metadata.name).sort();
-                }}
               />
             </Paper>
           </Grid>
