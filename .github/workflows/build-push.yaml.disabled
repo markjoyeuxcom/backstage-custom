@@ -16,7 +16,9 @@ on:
 
 env:
   DOCKER_IMAGE: awaybreaktoday/backstage-custom
-  PLATFORMS: linux/amd64,linux/arm64
+  # Use single arch for now to avoid disk space issues on GitHub runners
+  # Can add linux/arm64 later with larger runners or split builds
+  PLATFORMS: linux/amd64
 
 jobs:
   build:

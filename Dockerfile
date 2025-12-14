@@ -10,13 +10,12 @@
 # -----------------------------------------------------------------------------
 FROM node:22-bookworm-slim AS build
 
-# Install build dependencies
+# Install build dependencies (python3, g++, make needed for native npm packages)
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     python3 \
     g++ \
     make \
-    libsqlite3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
